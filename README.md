@@ -1,2 +1,2 @@
 # Engineering-And-Innovation-National-Challenge-2023
-Engineering And Innovation National Challenge 2023
+AI POWERED VEHICLE LICENSE-PLATE DETECTION SYSTEM
