@@ -1,0 +1,13 @@
+import subprocess
+
+# Wait for input
+user_input = input("Enter 1 to say hello or any other key to be kicked out: ")
+
+# Check the input
+if user_input == "1":
+    # Open new terminal window and say hello
+    subprocess.Popen(['gnome-terminal', '--', 'bash', '-c', 'echo "Hello Ahmed" && read -s -n 1 -p "Press any key to exit..." && exit'])
+else:
+    # Open new terminal window and show "kicked out" message
+    subprocess.Popen(['gnome-terminal', '--', 'bash', '-c', 'echo "You are kicked out" && read -s -n 1 -p "Press any key to exit..." && exit'])
+

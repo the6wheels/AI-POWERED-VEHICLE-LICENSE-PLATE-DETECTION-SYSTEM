@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Algerian Ploice Department</title>
+    <style>
+        <style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+    }
+
+    h1 {
+        text-align: center;
+    }
+
+    h2 {
+        margin-top: 20px;
+    }
+
+    video {
+        display: block;
+        margin: 20px auto;
+        border: 1px solid #ccc;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+    }
+
+    button {
+        display: block;
+        margin: 10px auto;
+        padding: 10px 20px;
+        font-size: 16px;
+        background-color: #4CAF50;
+        color: #fff;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background-color: #45a049;
+    }
+
+    #plateInfo {
+        margin-top: 20px;
+    }
+
+    .logo {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        width: 100px;
+        height: auto;
+        background-image: url('/logo.png');
+        background-size: cover;
+    }
+</style>
+
+    </style>
+</head>
+<body>
+    <h1>Algerian Ploice Department</h1>
+    
+    <div>
+        <h2>Road Control Devision</h2>
+        <video id="videoFeed" width="640" height="480" autoplay></video>
+    </div>
+    
+    <div>
+        <h2>Controls</h2>
+        <button id="buzzerBtn" onclick="toggleBuzzer()">Toggle Buzzer</button>
+        <button id="ledBtn" onclick="toggleLED()">Toggle LED</button>
+    </div>
+    
+    <div>
+        <h2>License Plate Information</h2>
+        <p id="plateInfo"></p>
+    </div>
+    
+    <script>
+
+    // JavaScript code for video streaming and button actions
+
+    // Get video feed element
+    const videoFeed = document.getElementById('videoFeed');
+
+    // Function to start streaming video
+    function startVideoStream() {
+        // Replace 'raspberry_pi_ip_address' with the actual IP address of your Raspberry Pi
+        const videoStreamUrl = 'http://raspberry_pi_ip_address:8000/stream.mjpg';
+        videoFeed.src = videoStreamUrl;
+    }
+
+    // Function to stop video streaming
+    function stopVideoStream() {
+        videoFeed.src = '';
+    }
+
+    // Function to toggle buzzer
+    function toggleBuzzer() {
+        // Send an AJAX request to the server to control the buzzer
+        // Replace 'raspberry_pi_ip_address' with the actual IP address of your Raspberry Pi
+        const buzzerUrl = `http://raspberry_pi_ip_address:5000/api/buzzer`;
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', buzzerUrl);
+        xhr.send();
+    }
+
+    // Function to toggle LED lights
+    function toggleLED() {
+        // Send an AJAX request to the server to control the LED lights
+        // Replace 'raspberry_pi_ip_address' with the actual IP address of your Raspberry Pi
+        const ledUrl = `http://raspberry_pi_ip_address:5000/api/led`;
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', ledUrl);
+        xhr.send();
+    }
+
+    // Function to send license plate data for processing
+    function sendLicensePlateData(plateNumber) {
+        // Replace 'raspberry_pi_ip_address' with the actual IP address of your Raspberry Pi
+        const licensePlateUrl = `http://raspberry_pi_ip_address:5000/api/license_plate`;
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', licensePlateUrl);
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        xhr.onload = function () {
+            if (xhr.status === 200) {
+                const driverInfo = JSON.parse(xhr.responseText);
+                displayDriverInfo(driverInfo);
+            } else {
+                console.log('Error:', xhr.status);
+            }
+        };
+        xhr.send(`plate_number=${plateNumber}`);
+    }
+
+    // Function to display driver information on the web page
+    function displayDriverInfo(driverInfo) {
+        const plateInfo = document.getElementById('plateInfo');
+        plateInfo.innerHTML = `
+            <strong>Name:</strong> ${driverInfo.name}<br>
+            <strong>License Number:</strong> ${driverInfo.license_number}<br>
+            <strong>Vehicle Model:</strong> ${driverInfo.vehicle_model}<br>
+            <strong>Color:</strong> ${driverInfo.color}
+        `;
+    }
+
+    // Start video streaming when the page loads
+    window.onload = function () {
+        startVideoStream();
+    };
+
+    </script>
+</body>
+</html>
